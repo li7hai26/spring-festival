@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>春节习俗查询</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="customs.css">
+</head>
+<body>
+    <!-- 全屏遮罩层 -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>AI 正在查询习俗...</p>
+        </div>
+    </div>
+
+    <!-- 烟花和粒子特效背景 -->
+    <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+
+    <!-- 左侧对联 -->
+    <div class="couplet-left">
+        <div class="couplet-text" id="coupletLeftText"></div>
+        <div class="couplet-loading" id="coupletLoading">
+            <div class="couplet-spinner"></div>
+        </div>
+    </div>
+
+    <!-- 右侧对联 -->
+    <div class="couplet-right">
+        <div class="couplet-text" id="coupletRightText"></div>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="nav-back">
+            <span class="nav-icon">←</span>
+            <span class="nav-text">返回首页</span>
+        </a>
+        <div class="nav-title">🎋 习俗查询</div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>🏮 春节习俗查询 🧧</h1>
+            <p class="subtitle">探索全国各地的春节传统习俗和礼仪</p>
+        </header>
+
+        <section class="customs-section">
+            <h2>📍 选择地区</h2>
+            <div class="form-group">
+                <label for="provinceSelect">省份/直辖市</label>
+                <select id="provinceSelect" class="select-input">
+                    <option value="">请选择省份</option>
+                    <option value="beijing">北京</option>
+                    <option value="shanghai">上海</option>
+                    <option value="guangdong">广东</option>
+                    <option value="sichuan">四川</option>
+                    <option value="jiangsu">江苏</option>
+                    <option value="zhejiang">浙江</option>
+                    <option value="fujian">福建</option>
+                    <option value="shandong">山东</option>
+                    <option value="henan">河南</option>
+                    <option value="hubei">湖北</option>
+                    <option value="hunan">湖南</option>
+                    <option value="shaanxi">陕西</option>
+                    <option value="liaoning">辽宁</option>
+                    <option value="jilin">吉林</option>
+                    <option value="heilongjiang">黑龙江</option>
+                    <option value="xinjiang">新疆</option>
+                    <option value="tibet">西藏</option>
+                    <option value="guangxi">广西</option>
+                    <option value="yunnan">云南</option>
+                    <option value="guizhou">贵州</option>
+                </select>
+            </div>
+            <button id="queryCustomsBtn" class="btn btn-accent">🔍 查询习俗</button>
+        </section>
+
+        <section class="customs-result" id="customsResult" style="display: none;">
+            <div class="result-header">
+                <h2>📋 <span id="customsTitle"></span>春节习俗</h2>
+                <button id="backToSearch" class="btn btn-small" style="width: auto; padding: 8px 15px;">← 返回查询</button>
+            </div>
+            <div id="customsContent" class="customs-content"></div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>🚀 使用 <strong>iflow CLI</strong> 创作</p>
+        <p class="footer-thanks">感谢 iflow CLI 的大力支持 ❤️</p>
+        <a href="index.html" class="back-link">← 返回首页</a>
+    </footer>
+
+    <script src="common.js"></script>
+    <script src="customs.js"></script>
+</body>
+</html>

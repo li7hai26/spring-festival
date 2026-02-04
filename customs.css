@@ -1,0 +1,137 @@
+/* 习俗查询专用样式 */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.loading-content .spinner {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    border: 4px solid rgba(255, 215, 0, 0.3);
+    border-top-color: var(--accent-gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-content p {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--accent-gold);
+}
+
+.result-header h2 {
+    color: var(--primary-red);
+    font-size: 1.6rem;
+    margin: 0;
+}
+
+section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--light-red);
+}
+
+section h2 {
+    color: var(--primary-red);
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--accent-gold);
+}
+
+.customs-result {
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.customs-result h2 {
+    color: var(--primary-red);
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+}
+
+.customs-content {
+    line-height: 1.8;
+    color: var(--text-dark);
+    font-size: 1.05rem;
+}
+
+.customs-content h3 {
+    color: var(--primary-red);
+    font-size: 1.3rem;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent-gold);
+}
+
+.customs-content h3:first-child {
+    margin-top: 0;
+}
+
+.customs-content p {
+    margin-bottom: 15px;
+    text-indent: 2em;
+}
+
+.customs-content ul {
+    margin-left: 30px;
+    margin-bottom: 15px;
+}
+
+.customs-content li {
+    margin-bottom: 8px;
+    padding-left: 5px;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    section {
+        padding: 20px;
+    }
+    
+    section h2 {
+        font-size: 1.4rem;
+    }
+}

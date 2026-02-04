@@ -1,0 +1,389 @@
+/* 故事生成器专用样式 */
+
+section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--light-red);
+}
+
+section h2 {
+    color: var(--primary-red);
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--accent-gold);
+}
+
+/* 选项网格布局 */
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* 字符计数器 */
+.char-counter {
+    text-align: right;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--primary-red);
+}
+
+/* 加载动画 */
+.loading-spinner {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    border: 4px solid var(--light-red);
+    border-top-color: var(--primary-red);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-spinner p {
+    color: var(--dark-red);
+    font-size: 1.1rem;
+}
+
+/* 故事输出区域 */
+.story-output {
+    min-height: 200px;
+    padding: 20px;
+    background: #FFFEF9;
+    border-radius: 10px;
+    border: 2px dashed var(--light-red);
+    margin-top: 20px;
+}
+
+.story-placeholder {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 1.1rem;
+}
+
+.story-content h3 {
+    color: var(--primary-red);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent-gold);
+}
+
+.story-text {
+    line-height: 1.8;
+    color: var(--text-dark);
+    font-size: 1.05rem;
+}
+
+.story-text p {
+    margin-bottom: 15px;
+    text-indent: 2em;
+}
+
+.error-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--error);
+    font-size: 1.1rem;
+}
+
+.error-message p {
+    margin: 0;
+}
+
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+    position: relative;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--accent-gold);
+}
+
+.modal-header h2 {
+    color: var(--primary-red);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.modal-close:hover {
+    color: var(--error);
+}
+
+.api-info {
+    background: var(--light-red);
+    border-left: 4px solid var(--primary-red);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.api-info p {
+    margin: 0;
+}
+
+.api-info code {
+    background: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+.api-info a {
+    color: var(--primary-red);
+    text-decoration: underline;
+}
+
+.config-form {
+    margin: 0;
+}
+
+.config-form .btn {
+    margin-top: 10px;
+}
+
+.status-message {
+    margin-top: 15px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: none;
+}
+
+.status-message.success {
+    background: #E8F5E9;
+    color: var(--success);
+    border: 1px solid #C8E6C9;
+}
+
+.status-message.error {
+    background: #FFEBEE;
+    color: var(--error);
+    border: 1px solid #FFCDD2;
+}
+
+/* 成就系统样式 */
+.achievement-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.1) 100%);
+    border-radius: 10px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-red);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--dark-red);
+    margin-top: 5px;
+}
+
+.achievement-list {
+    display: grid;
+    gap: 15px;
+}
+
+.achievement-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #FFFEF9;
+    border: 2px solid #E8E8E8;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.achievement-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-item.unlocked {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 165, 0, 0.05) 100%);
+    border-color: var(--accent-gold);
+}
+
+.achievement-icon-display {
+    font-size: 2rem;
+}
+
+.achievement-info {
+    flex: 1;
+}
+
+.achievement-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.achievement-desc-display {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.achievement-status {
+    font-weight: 600;
+    color: var(--success);
+}
+
+.achievement-item.locked .achievement-status {
+    color: #999;
+}
+
+.achievement-item.locked {
+    opacity: 0.6;
+}
+
+/* 历史故事样式 */
+.history-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.history-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.history-item {
+    background: #FFFEF9;
+    border: 2px solid #E8E8E8;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.history-item:hover {
+    border-color: var(--accent-gold);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.history-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.history-content {
+    padding-top: 15px;
+    border-top: 1px solid #E8E8E8;
+}
+
+.history-text {
+    line-height: 1.6;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+.btn-small {
+    width: auto;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .achievement-stats {
+        gap: 20px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .modal-content {
+        padding: 20px;
+    }
+}

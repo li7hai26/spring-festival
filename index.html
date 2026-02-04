@@ -3,81 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 年兽故事生成器</title>
-    <link rel="stylesheet" href="style.css">
+    <title>春节主题活动</title>
+    <link rel="stylesheet" href="common.css">
 </head>
 <body>
-    <!-- 成就显示区域 -->
-    <div id="achievementToast" class="achievement-toast">
-        <div class="achievement-icon">🏆</div>
-        <div class="achievement-content">
-            <div class="achievement-title">解锁成就！</div>
-            <div class="achievement-desc" id="achievementDesc"></div>
+    <!-- 烟花和粒子特效背景 -->
+    <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+
+    <!-- 左侧对联 -->
+    <div class="couplet-left">
+        <div class="couplet-text" id="coupletLeftText"></div>
+        <div class="couplet-loading" id="coupletLoading">
+            <div class="couplet-spinner"></div>
         </div>
     </div>
 
-    <div class="container">
-        <header class="header">
-            <h1>🧨 AI 年兽故事生成器 🏮</h1>
-            <p class="subtitle">用 AI 创作属于你的春节年兽传说</p>
+    <!-- 右侧对联 -->
+    <div class="couplet-right">
+        <div class="couplet-text" id="coupletRightText"></div>
+    </div>
+
+    <!-- 右上角按钮组 -->
+    <div class="top-buttons">
+        <button id="configBtn" class="config-button">⚙️</button>
+    </div>
+
+    <!-- 主导航 -->
+    <div class="main-container">
+        <header class="main-header">
+            <h1>🧧 春节主题活动 🏮</h1>
+            <p class="subtitle">探索春节文化，创作年兽故事</p>
         </header>
 
-        <div class="header-actions">
-            <button id="configBtn" class="btn btn-small btn-icon">⚙️ 配置 API</button>
+        <div class="module-grid">
+            <a href="story.html" class="module-card">
+                <div class="module-icon">📜</div>
+                <h2>春节年兽故事生成器</h2>
+                <p>用 AI 创作属于你的春节年兽传说</p>
+                <div class="module-arrow">→</div>
+            </a>
+
+            <a href="customs.html" class="module-card">
+                <div class="module-icon">🏮</div>
+                <h2>春节习俗查询</h2>
+                <p>探索全国各地的春节传统习俗和礼仪</p>
+                <div class="module-arrow">→</div>
+            </a>
         </div>
 
-        <section class="story-section">
-            <h2>📖 生成年兽故事</h2>
-            
-            <div class="options-grid">
-                <div class="form-group">
-                    <label for="storyStyle">🎨 故事风格</label>
-                    <select id="storyStyle" class="select-input">
-                        <option value="traditional">传统神话风格</option>
-                        <option value="humorous">幽默搞笑风格</option>
-                        <option value="adventure">冒险探险风格</option>
-                        <option value="warm">温馨治愈风格</option>
-                        <option value="mystery">悬疑解谜风格</option>
-                    </select>
+        <!-- 春节倒计时 -->
+        <div class="countdown-container">
+            <h2>🎊 距离2026年春节还有</h2>
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="countdownDays">0</span>
+                    <span class="countdown-label">天</span>
                 </div>
-                
-                <div class="form-group">
-                    <label for="ageRange">👥 适合年龄</label>
-                    <select id="ageRange" class="select-input">
-                        <option value="3-6">3-6岁（幼儿）</option>
-                        <option value="7-12">7-12岁（儿童）</option>
-                        <option value="13-18">13-18岁（青少年）</option>
-                        <option value="adult">成人（18岁以上）</option>
-                    </select>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="countdownHours">0</span>
+                    <span class="countdown-label">时</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="countdownMinutes">0</span>
+                    <span class="countdown-label">分</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="countdownSeconds">0</span>
+                    <span class="countdown-label">秒</span>
                 </div>
             </div>
-            
-            <div class="form-group">
-                <label for="storyPrompt">故事提示词</label>
-                <textarea id="storyPrompt" rows="4" maxlength="500" placeholder="例如：写一个关于年兽和小男孩的故事，年兽因为吃到了年夜饭的饺子而决定不再吃人..."></textarea>
-                <div class="char-counter">
-                    <span id="charCount">0</span> / 500
-                </div>
-            </div>
-            <button id="generateBtn" class="btn btn-accent">✨ 生成故事</button>
-            
-            <div id="loadingSpinner" class="loading-spinner" style="display: none;">
-                <div class="spinner"></div>
-                <p>AI 正在创作中...</p>
-            </div>
-
-            <div id="storyOutput" class="story-output">
-                <div class="story-placeholder">
-                    <p>🎆 你的年兽故事将显示在这里</p>
-                </div>
-            </div>
-        </section>
+        </div>
     </div>
-
-    <footer class="footer">
-        <p>🚀 使用 <strong>iflow CLI</strong> 创作</p>
-        <p class="footer-thanks">感谢 iflow CLI 的大力支持 ❤️</p>
-    </footer>
 
     <!-- 配置模态框 -->
     <div id="configModal" class="modal">
@@ -108,6 +104,11 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <footer class="footer">
+        <p>🚀 使用 <strong>iflow CLI</strong> 创作</p>
+        <p class="footer-thanks">感谢 iflow CLI 的大力支持 ❤️</p>
+    </footer>
+
+    <script src="common.js"></script>
 </body>
 </html>

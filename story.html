@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>春节年兽故事生成器</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="story.css">
+</head>
+<body>
+    <!-- 烟花和粒子特效背景 -->
+    <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+
+    <!-- 左侧对联 -->
+    <div class="couplet-left">
+        <div class="couplet-text" id="coupletLeftText"></div>
+        <div class="couplet-loading" id="coupletLoading">
+            <div class="couplet-spinner"></div>
+        </div>
+    </div>
+
+    <!-- 右侧对联 -->
+    <div class="couplet-right">
+        <div class="couplet-text" id="coupletRightText"></div>
+    </div>
+
+    <!-- 右上角按钮组 -->
+    <div class="top-buttons">
+        <button id="historyBtn" class="config-button history-button">📚</button>
+        <button id="achievementBtn" class="config-button achievement-button">🏆</button>
+        <button id="configBtn" class="config-button">⚙️</button>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="nav-back">
+            <span class="nav-icon">←</span>
+            <span class="nav-text">返回首页</span>
+        </a>
+        <div class="nav-title">📖 故事生成器</div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>🧨 春节年兽故事生成器 🏮</h1>
+            <p class="subtitle">用 AI 创作属于你的春节年兽传说</p>
+        </header>
+
+        <section class="story-section">
+            <h2>📖 生成年兽故事</h2>
+            
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="storyStyle">🎨 故事风格</label>
+                    <select id="storyStyle" class="select-input">
+                        <option value="traditional">传统神话风格</option>
+                        <option value="humorous">幽默搞笑风格</option>
+                        <option value="adventure">冒险探险风格</option>
+                        <option value="warm">温馨治愈风格</option>
+                        <option value="mystery">悬疑解谜风格</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ageRange">👥 适合年龄</label>
+                    <select id="ageRange" class="select-input">
+                        <option value="3-6">3-6岁（幼儿）</option>
+                        <option value="7-12">7-12岁（儿童）</option>
+                        <option value="13-18">13-18岁（青少年）</option>
+                        <option value="adult">成人（18岁以上）</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="storyPrompt">故事提示词</label>
+                <textarea id="storyPrompt" rows="4" maxlength="500" placeholder="例如：写一个关于年兽和小男孩的故事，年兽因为吃到了年夜饭的饺子而决定不再吃人..."></textarea>
+                <div class="char-counter">
+                    <span id="charCount">0</span> / 500
+                </div>
+            </div>
+            <button id="generateBtn" class="btn btn-accent">✨ 生成故事</button>
+            
+            <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                <div class="spinner"></div>
+                <p>AI 正在创作中...</p>
+            </div>
+
+            <div id="storyOutput" class="story-output">
+                <div class="story-placeholder">
+                    <p>🎆 你的年兽故事将显示在这里</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>🚀 使用 <strong>iflow CLI</strong> 创作</p>
+        <p class="footer-thanks">感谢 iflow CLI 的大力支持 ❤️</p>
+        <a href="index.html" class="back-link">← 返回首页</a>
+    </footer>
+
+    <!-- 配置模态框 -->
+    <div id="configModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ 配置 API</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="api-info">
+                <p>💡 使用 <code>https://apis.iflow.cn/v1</code> 时，前往 <a href="https://platform.iflow.cn/profile?tab=apiKey" target="_blank">platform.iflow.cn</a> 获取 API Key</p>
+            </div>
+            <form id="configForm" class="config-form">
+                <div class="form-group">
+                    <label for="apiUrl">API URL</label>
+                    <input type="url" id="apiUrl" placeholder="https://apis.iflow.cn/v1" required>
+                </div>
+                <div class="form-group">
+                    <label for="apiKey">API Key</label>
+                    <input type="password" id="apiKey" placeholder="sk-..." required>
+                </div>
+                <div class="form-group">
+                    <label for="modelName">模型名称</label>
+                    <input type="text" id="modelName" placeholder="iflow-rome-30ba3b" required>
+                </div>
+                <button type="submit" class="btn btn-primary">💾 保存配置</button>
+            </form>
+            <div id="configStatus" class="status-message"></div>
+        </div>
+    </div>
+
+    <!-- 成就模态框 -->
+    <div id="achievementModal" class="modal">
+        <div class="modal-content achievement-modal-content">
+            <div class="modal-header">
+                <h2>🏆 成就系统</h2>
+                <button class="modal-close" id="closeAchievementModal">&times;</button>
+            </div>
+            <div class="achievement-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="achievementCount">0</span>
+                    <span class="stat-label">已解锁</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="achievementTotal">11</span>
+                    <span class="stat-label">总成就</span>
+                </div>
+            </div>
+            <div class="achievement-list" id="achievementList">
+                <!-- 成就列表将通过 JavaScript 动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 历史故事模态框 -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📚 历史故事</h2>
+                <button class="modal-close" id="closeHistoryModal">&times;</button>
+            </div>
+            <div class="history-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="storyCount">0</span>
+                    <span class="stat-label">总故事</span>
+                </div>
+                <div class="stat-item">
+                    <button id="clearHistoryBtn" class="btn btn-small" style="background: var(--error);">🗑️ 清空历史</button>
+                </div>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- 历史故事列表将通过 JavaScript 动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="story.js"></script>
+</body>
+</html>
