@@ -1,0 +1,44 @@
+# 操作系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+*.tmp
+*.temp
+*.log
+
+# 节点模块（如果使用）
+node_modules/
+package-lock.json
+yarn.lock
+
+# Python 缓存（如果使用）
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+
+# 构建产物
+dist/
+build/
+*.min.js
+*.min.css
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# 备份文件
+*.bak
+*.backup
