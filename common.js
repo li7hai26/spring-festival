@@ -3,7 +3,7 @@
 // 全局变量
 let canvas, ctx;
 let fireworks = [];
-let particles;
+let particles = [];
 let bgParticles = [];
 
 // 初始化 canvas
@@ -435,7 +435,10 @@ function updateCountdown() {
 const STORAGE_KEYS = {
     API_URL: 'nianshou_api_url',
     API_KEY: 'nianshou_api_key',
-    MODEL_NAME: 'nianshou_model_name'
+    MODEL_NAME: 'nianshou_model_name',
+    STORY_COUNT: 'nianshou_story_count',
+    ACHIEVEMENTS: 'nianshou_achievements',
+    STORY_HISTORY: 'nianshou_story_history'
 };
 
 // 初始化配置模态框
