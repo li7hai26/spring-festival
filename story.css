@@ -33,29 +33,13 @@ section h2 {
     color: var(--primary-red);
 }
 
-/* 加载动画 */
-.loading-spinner {
+/* 流式加载提示 */
+.loading-text {
+    color: var(--primary-red);
+    font-size: 1.1rem;
+    font-style: italic;
     text-align: center;
     padding: 40px 20px;
-}
-
-.spinner {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 20px;
-    border: 4px solid var(--light-red);
-    border-top-color: var(--primary-red);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.loading-spinner p {
-    color: var(--dark-red);
-    font-size: 1.1rem;
 }
 
 /* 故事输出区域 */

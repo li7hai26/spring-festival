@@ -145,60 +145,11 @@ function initGenerateStory() {
             return;
         }
         
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        // 先显示加载状态
+        showStreamingLoading();
         
         try {
-            showLoading(true);
-            
-            const styleDescriptions = {
-                'traditional': '传统神话风格：使用古典的叙事方式，融入神话元素和传说色彩',
-                'humorous': '幽默搞笑风格：轻松诙谐，富有童趣和幽默感',
-                'adventure': '冒险探险风格：充满悬念和冒险元素，情节跌宕起伏',
-                'warm': '温馨治愈风格：温暖感人，注重情感表达和治愈力量',
-                'mystery': '悬疑解谜风格：带有神秘色彩，需要年兽或主人公通过智慧解开谜团'
-            };
-            
-            const ageDescriptions = {
-                '3-6': '适合3-6岁幼儿：语言简单，情节温馨，多用拟声词，篇幅控制在200字以内',
-                '7-12': '适合7-12岁儿童：故事情节生动有趣，人物形象鲜明，有一定的想象力',
-                '13-18': '适合13-18岁青少年：情节有一定的深度，寓意深刻，语言表达较为成熟',
-                'adult': '适合成人：内容丰富，思想深刻，语言表达老练，具有文学性'
-            };
-            
-            const response = await fetch(`${apiUrl}/chat/completions`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    model: modelName,
-                    messages: [
-                        {
-                            role: 'system',
-                            content: `你是一个专门创作年兽故事的作家。严格规则：1. 只能创作关于年兽的故事，年兽必须是故事的核心角色；2. 故事背景必须设定在春节时期或与春节习俗相关；3. 不得偏离年兽主题，不能写成其他动物或角色的故事；4. 用生动、有趣的风格创作；5. 如果用户提示词与年兽无关，请拒绝并说明"我只能创作年兽相关的春节故事"。\n\n${styleDescriptions[style] || ''}\n\n${ageDescriptions[ageRange] || ''}`
-                        },
-                        {
-                            role: 'user',
-                            content: prompt
-                        }
-                    ],
-                    max_tokens: 1500,
-                    temperature: 0.8
-                }),
-                signal: controller.signal
-            });
-            
-            clearTimeout(timeoutId);
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || `HTTP ${response.status}`);
-            }
-            
-            const data = await response.json();
-            const story = data.choices[0].message.content;
+            const story = await generateStoryWithStream(prompt, style, ageRange, apiUrl, apiKey, modelName);
             
             displayStory(story);
             saveStoryToHistory(story, style, ageRange);
@@ -220,8 +171,6 @@ function initGenerateStory() {
             checkStoryCountAchievements();
             
         } catch (error) {
-            clearTimeout(timeoutId);
-            
             let errorMessage = '生成失败';
             if (error.name === 'AbortError') {
                 errorMessage = '请求超时，请检查网络连接后重试';
@@ -232,26 +181,160 @@ function initGenerateStory() {
             }
             
             showStoryError(errorMessage);
-        } finally {
-            showLoading(false);
         }
     });
 }
 
-// 显示加载状态
-function showLoading(show) {
-    const spinner = document.getElementById('loadingSpinner');
+// 显示流式加载状态
+function showStreamingLoading() {
+    const outputDiv = document.getElementById('storyOutput');
     const generateBtn = document.getElementById('generateBtn');
     
-    if (show) {
-        spinner.style.display = 'block';
-        generateBtn.disabled = true;
-        generateBtn.textContent = '⏳ 生成中...';
-    } else {
-        spinner.style.display = 'none';
+    outputDiv.innerHTML = `
+        <div class="story-content">
+            <h3>📜 年兽故事</h3>
+            <p class="loading-text">AI 正在创作中...</p>
+        </div>
+    `;
+    
+    generateBtn.disabled = true;
+    generateBtn.textContent = '⏳ 生成中...';
+}
+
+// 流式生成故事
+async function generateStoryWithStream(prompt, style, ageRange, apiUrl, apiKey, modelName) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 90000);
+    
+    let fullContent = '';
+    
+    const styleDescriptions = {
+        'traditional': '传统神话风格：使用古典的叙事方式，融入神话元素和传说色彩',
+        'humorous': '幽默搞笑风格：轻松诙谐，富有童趣和幽默感',
+        'adventure': '冒险探险风格：充满悬念和冒险元素，情节跌宕起伏',
+        'warm': '温馨治愈风格：温暖感人，注重情感表达和治愈力量',
+        'mystery': '悬疑解谜风格：带有神秘色彩，需要年兽或主人公通过智慧解开谜团'
+    };
+    
+    const ageDescriptions = {
+        '3-6': '适合3-6岁幼儿：语言简单，情节温馨，多用拟声词，篇幅控制在200字以内',
+        '7-12': '适合7-12岁儿童：故事情节生动有趣，人物形象鲜明，有一定的想象力',
+        '13-18': '适合13-18岁青少年：情节有一定的深度，寓意深刻，语言表达较为成熟',
+        'adult': '适合成人：内容丰富，思想深刻，语言表达老练，具有文学性'
+    };
+    
+    try {
+        const response = await fetch(`${apiUrl}/chat/completions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: modelName,
+                messages: [
+                    {
+                        role: 'system',
+                        content: `你是一个专门创作年兽故事的作家。严格规则：1. 只能创作关于年兽的故事，年兽必须是故事的核心角色；2. 故事背景必须设定在春节时期或与春节习俗相关；3. 不得偏离年兽主题，不能写成其他动物或角色的故事；4. 用生动、有趣的风格创作；5. 如果用户提示词与年兽无关，请拒绝并说明"我只能创作年兽相关的春节故事"。\n\n${styleDescriptions[style] || ''}\n\n${ageDescriptions[ageRange] || ''}`
+                    },
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                max_tokens: 1500,
+                temperature: 0.8,
+                stream: true
+            }),
+            signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+        }
+        
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            // 解码并添加到缓冲区
+            buffer += decoder.decode(value, { stream: true });
+            
+            // 按行分割
+            const lines = buffer.split('\n');
+            // 保留最后一行（可能不完整）
+            buffer = lines.pop() || '';
+            
+            // 处理每个完整的行
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (trimmedLine.startsWith('data:')) {
+                    const data = trimmedLine.slice(5);
+                    if (data === '[DONE]') continue;
+                    
+                    try {
+                        const json = JSON.parse(data);
+                        const content = json.choices?.[0]?.delta?.content;
+                        if (content) {
+                            fullContent += content;
+                            displayStreamingStory(fullContent);
+                        }
+                    } catch (e) {
+                        // 忽略解析错误，继续处理下一行
+                    }
+                }
+            }
+        }
+        
+        // 处理缓冲区中剩余的内容
+        if (buffer.trim()) {
+            const trimmedLine = buffer.trim();
+            if (trimmedLine.startsWith('data:')) {
+                const data = trimmedLine.slice(5);
+                if (data !== '[DONE]') {
+                    try {
+                        const json = JSON.parse(data);
+                        const content = json.choices?.[0]?.delta?.content;
+                        if (content) {
+                            fullContent += content;
+                            displayStreamingStory(fullContent);
+                        }
+                    } catch (e) {
+                        // 忽略解析错误
+                    }
+                }
+            }
+        }
+        
+        // 恢复按钮状态
+        const generateBtn = document.getElementById('generateBtn');
         generateBtn.disabled = false;
         generateBtn.textContent = '✨ 生成故事';
+        
+        return fullContent;
+        
+    } catch (error) {
+        clearTimeout(timeoutId);
+        throw error;
     }
+}
+
+// 显示流式故事内容
+function displayStreamingStory(content) {
+    const outputDiv = document.getElementById('storyOutput');
+    outputDiv.innerHTML = `
+        <div class="story-content">
+            <h3>📜 年兽故事</h3>
+            <div class="story-text">${formatStoryText(content)}</div>
+        </div>
+    `;
 }
 
 // 显示故事
