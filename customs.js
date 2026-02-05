@@ -24,47 +24,56 @@ const PROVINCE_NAMES = {
     guizhou: '贵州'
 };
 
-// 查询习俗
-document.getElementById('queryCustomsBtn').addEventListener('click', async () => {
-    const province = document.getElementById('provinceSelect').value;
-    
-    if (!province) {
-        alert('请选择省份');
-        return;
+// 页面加载时初始化
+document.addEventListener('DOMContentLoaded', () => {
+    // 查询习俗
+    const queryBtn = document.getElementById('queryCustomsBtn');
+    if (queryBtn) {
+        queryBtn.addEventListener('click', async () => {
+            const province = document.getElementById('provinceSelect').value;
+            
+            if (!province) {
+                alert('请选择省份');
+                return;
+            }
+            
+            const provinceName = PROVINCE_NAMES[province];
+            const overlay = document.getElementById('loadingOverlay');
+            
+            // 显示全屏遮罩
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
+            
+            try {
+                const customs = await queryCustomsWithAI(provinceName);
+                displayCustoms(provinceName, customs);
+            } catch (error) {
+                const resultSection = document.getElementById('customsResult');
+                const contentDiv = document.getElementById('customsContent');
+                resultSection.style.display = 'block';
+                contentDiv.innerHTML = `
+                    <div class="error-message">
+                        <p>❌ 查询失败: ${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                // 隐藏全屏遮罩
+                if (overlay) {
+                    overlay.style.display = 'none';
+                }
+            }
+        });
     }
     
-    const provinceName = PROVINCE_NAMES[province];
-    const overlay = document.getElementById('loadingOverlay');
-    
-    // 显示全屏遮罩
-    if (overlay) {
-        overlay.style.display = 'flex';
+    // 返回查询按钮
+    const backBtn = document.getElementById('backToSearch');
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            document.getElementById('customsResult').style.display = 'none';
+            document.querySelector('.customs-section').scrollIntoView({ behavior: 'smooth' });
+        });
     }
-    
-    try {
-        const customs = await queryCustomsWithAI(provinceName);
-        displayCustoms(provinceName, customs);
-    } catch (error) {
-        const resultSection = document.getElementById('customsResult');
-        const contentDiv = document.getElementById('customsContent');
-        resultSection.style.display = 'block';
-        contentDiv.innerHTML = `
-            <div class="error-message">
-                <p>❌ 查询失败: ${error.message}</p>
-            </div>
-        `;
-    } finally {
-        // 隐藏全屏遮罩
-        if (overlay) {
-            overlay.style.display = 'none';
-        }
-    }
-});
-
-// 返回查询按钮
-document.getElementById('backToSearch').addEventListener('click', () => {
-    document.getElementById('customsResult').style.display = 'none';
-    document.querySelector('.customs-section').scrollIntoView({ behavior: 'smooth' });
 });
 
 // 使用 AI 查询习俗
